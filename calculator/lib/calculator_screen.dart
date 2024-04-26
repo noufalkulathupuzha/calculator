@@ -37,10 +37,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           //Inputs
           Wrap(
             children: Btn.buttonValues
-                .map((e) => SizedBox(
+                .map((value) => SizedBox(
                     height: screenSize.width / 5,
-                    width: screenSize.width / 4,
-                    child: buildButton(e)))
+                    width: value == Btn.n0
+                        ? (screenSize.width / 2)
+                        : (screenSize.width / 4),
+                    child: buildButton(value)))
                 .toList(),
           )
         ],
@@ -52,12 +54,35 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Material(
+          color: getButtonColor(value),
           clipBehavior: Clip.hardEdge,
           shape: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.white),
             borderRadius: BorderRadius.circular(100),
           ),
-          child: InkWell(onTap: () {}, child: Center(child: Text(value)))),
+          child: InkWell(
+              onTap: () {},
+              child: Center(
+                  child: Text(
+                value,
+                style:
+                    const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              )))),
     );
+  }
+
+  Color getButtonColor(value) {
+    return [Btn.del, Btn.clr].contains(value)
+        ? Colors.blueAccent
+        : [
+            Btn.per,
+            Btn.add,
+            Btn.substract,
+            Btn.multipy,
+            Btn.divide,
+            Btn.calculate
+          ].contains(value)
+            ? Colors.orange
+            : Colors.black45;
   }
 }
