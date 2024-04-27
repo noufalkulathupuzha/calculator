@@ -55,6 +55,16 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     ));
   }
 
+  /**
+     * Builds a button widget with the given value.
+     *
+     * The button widget is wrapped in padding and has a circular shape.
+     * The button's color is determined by the `getButtonColor` function.
+     * The button's text is the value passed as a parameter.
+     *
+     * @param value The value to be displayed on the button.
+     * @return The built button widget.
+     */ ///
   Widget buildButton(value) {
     return Padding(
       padding: const EdgeInsets.all(4.0),
@@ -76,6 +86,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
+  // Handles button tap actions based on the input value.
+  // Executes different actions depending on the value.
+  // Calls other functions like calculateResult, clearAll, and delete.
   void onButtonTap(String value) {
     if (value != Btn.dot && int.tryParse(value) == null) {
       if (operand.isNotEmpty && number2.isNotEmpty) {
@@ -137,6 +150,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     setState(() {});
   }
 
+  /// Clears all the input fields: number1, operand, and number2.
+  /// This function triggers a state update to reflect the cleared values.
   void clearAll() {
     setState(() {
       number1 = "";
@@ -145,50 +160,56 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     });
   }
 
+  /// Calculates the result of a mathematical operation based on the current state of the calculator.
+  ///
+  /// This function takes the values of `number1`, `number2`, and `operand` and performs the corresponding mathematical operation.
+  /// The result is then stored in `number1` and the values of `operand` and `number2` are reset to empty strings.
+  ///
+  /// Returns `void`.
   void calculateResult() {
-    if (number1.isEmpty || number2.isEmpty || operand.isEmpty) {
-      return; // Early return to avoid NullPointerException
-    }
-    double result = 0;
-    double num1;
-    double num2;
-    try {
-      num1 = double.parse(number1);
-      num2 = double.parse(number2);
-    } on FormatException {
-      return; // Early return to avoid FormatException
-    }
-    if (operand == Btn.per) {
-      double num1 = double.parse(number1);
-      double num2 = double.parse(number2);
-      double percentage = (num1 * num2) / 100;
-      number1 = percentage.toStringAsFixed(2);
-    }
+    if (number1.isEmpty || number2.isEmpty || operand.isEmpty) return;
+    double num1 = double.parse(number1);
+    double num2 = double.parse(number2);
     switch (operand) {
       case Btn.add:
-        result = num1 + num2;
+        number1 = '${num1 + num2}';
         break;
       case Btn.substract:
-        result = num1 - num2;
+        number1 = '${num1 - num2}';
         break;
       case Btn.multipy:
-        result = num1 * num2;
+        number1 = '${num1 * num2}';
         break;
       case Btn.divide:
         if (num2 == 0) {
-          result = double.infinity; // Handle division by zero
+          number1 = 'inf';
         } else {
-          result = num1 / num2;
+          number1 = '${num1 / num2}';
         }
+        break;
+      case Btn.per:
+        number1 = '${num1 * (num2 / 100)}';
         break;
       default:
         return; //Unknown operator, early return
     }
-    number1 = result.toString();
     operand = "";
     number2 = "";
   }
 
+  /// Returns the color for a given button value.
+  ///
+  /// The color is determined based on the value of the button. If the value is
+  /// [Btn.del] or [Btn.clr], the color is set to [Colors.blue.shade600]. If the
+  /// value is any of [Btn.per], [Btn.add], [Btn.substract], [Btn.multipy],
+  /// [Btn.divide], or [Btn.calculate], the color is set to [Colors.orange].
+  /// Otherwise, the color is set to [Colors.black45].
+  ///
+  /// Parameters:
+  ///   - value: The value of the button.
+  ///
+  /// Returns:
+  ///   A [Color] representing the color for the button.
   Color getButtonColor(value) {
     return [Btn.del, Btn.clr].contains(value)
         ? Colors.blue.shade600
