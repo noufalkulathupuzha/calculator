@@ -107,36 +107,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       delete(); // Call the delete function here
       return; // Add a return statement to avoid executing further logic for Btn.del
     }
-    if (value == Btn.per) {
-      getPercentage();
-      return;
-    }
+    // if (value == Btn.per) {
+    //   calculatePercentage();
+    //   return;
+    // }
 
-    setState(() {});
-  }
-
-  void calculatePercentage() {
-    if (number1.isNotEmpty && number2.isNotEmpty && operand.isEmpty) {
-      double num1 = double.parse(number1);
-      double num2 = double.parse(number2);
-      double percentage = (num1 / num2) * 100;
-      number1 = percentage
-          .toStringAsFixed(2); // Display percentage with 2 decimal places
-      setState(() {});
-    }
-  }
-
-  void getPercentage() {
-    if (number2.isNotEmpty) {
-      double num2 = double.parse(number2);
-      double result = num2 / 100;
-      number2 = result.toString();
-    }
-    if (number1.isNotEmpty) {
-      double num1 = double.parse(number1);
-      double result = num1 / 100;
-      number1 = result.toString();
-    }
     setState(() {});
   }
 
@@ -182,6 +157,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       num2 = double.parse(number2);
     } on FormatException {
       return; // Early return to avoid FormatException
+    }
+    if (operand == Btn.per) {
+      double num1 = double.parse(number1);
+      double num2 = double.parse(number2);
+      double percentage = (num1 * num2) / 100;
+      number1 = percentage.toStringAsFixed(2);
     }
     switch (operand) {
       case Btn.add:
