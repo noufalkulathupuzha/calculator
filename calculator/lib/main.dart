@@ -10,22 +10,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String title = 'Calculator';
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: title,
+      title: 'Calculator',
       theme: ThemeData(
-        primaryColor: Colors.indigo, // Change the primary color to indigo
-        hintColor:
-            Colors.orangeAccent, // Change the accent color to orangeAccent
-        scaffoldBackgroundColor:
-            Colors.grey[200], // Set background color to light grey
+        primarySwatch: Colors.indigo,
+        hintColor: Colors.orangeAccent,
+        scaffoldBackgroundColor: Colors.grey[200],
         textTheme: const TextTheme(
-          titleLarge: TextStyle(
-            color: Colors.black, // Set headline text color to black
-            fontWeight: FontWeight.bold, // Set headline text weight to bold
-            fontSize: 24, // Set headline font size to 24
+          headlineLarge: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
           ),
         ),
       ),
