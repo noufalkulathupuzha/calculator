@@ -43,7 +43,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           Wrap(
             children: Btn.buttonValues
                 .map((value) => SizedBox(
-                    height: screenSize.width / 5,
+                    height: screenSize.width / 6,
                     width: value == Btn.n0
                         ? (screenSize.width / 2)
                         : (screenSize.width / 4),
@@ -102,23 +102,59 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     }
     if (value == Btn.calculate) {
       calculateResult(); // Calculate result when equals button is pressed
-    } else if (value == Btn.del) {
-      delete();
+    }
+    if (value == Btn.del) {
+      delete(); // Call the delete function here
+      return; // Add a return statement to avoid executing further logic for Btn.del
+    }
+    if (value == Btn.per) {
+      getPercentage();
       return;
     }
 
     setState(() {});
   }
 
-  // Deletes a character from the input fields based on their content.
+  void calculatePercentage() {
+    if (number1.isNotEmpty && number2.isNotEmpty && operand.isEmpty) {
+      double num1 = double.parse(number1);
+      double num2 = double.parse(number2);
+      double percentage = (num1 / num2) * 100;
+      number1 = percentage
+          .toStringAsFixed(2); // Display percentage with 2 decimal places
+      setState(() {});
+    }
+  }
+
+  void getPercentage() {
+    if (number2.isNotEmpty) {
+      double num2 = double.parse(number2);
+      double result = num2 / 100;
+      number2 = result.toString();
+    }
+    if (number1.isNotEmpty) {
+      double num1 = double.parse(number1);
+      double result = num1 / 100;
+      number1 = result.toString();
+    }
+    setState(() {});
+  }
+
+  /// Deletes the last character from either `number2` or `number1` if they are not empty.
+  /// If `number2` is empty but `operand` is not empty, clears the `operand`.
+  /// If both `number2` and `operand` are empty but `number1` is not empty, deletes the last character from `number1`.
+  ///
+  /// This function does not return anything.
   void delete() {
     if (number2.isNotEmpty) {
       // If there are characters in number2, delete the last character from it
       number2 = number2.substring(0, number2.length - 1);
-    } else if (operand.isNotEmpty) {
+    }
+    if (operand.isNotEmpty) {
       // If number2 is empty but there is an operand, clear the operand
       operand = "";
-    } else if (number1.isNotEmpty) {
+    }
+    if (number1.isNotEmpty) {
       // If both number2 and operand are empty but there are characters in number1,
       // delete the last character from number1
       number1 = number1.substring(0, number1.length - 1);
@@ -174,7 +210,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   Color getButtonColor(value) {
     return [Btn.del, Btn.clr].contains(value)
-        ? Colors.blueAccent
+        ? Colors.blue.shade600
         : [
             Btn.per,
             Btn.add,
