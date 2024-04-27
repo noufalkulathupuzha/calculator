@@ -91,28 +91,26 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   // Calls other functions like calculateResult, clearAll, and delete.
   void onButtonTap(String value) {
     if (value != Btn.dot && int.tryParse(value) == null) {
+      // Handle operators
       if (operand.isNotEmpty && number2.isNotEmpty) {
         calculateResult(); // Calculate result if both operands are set
       }
       operand = value;
     } else if (number1.isEmpty || operand.isEmpty) {
+      // Handle number1 input
       if (value == Btn.dot && number1.contains(Btn.dot)) return;
-      if (value == Btn.dot && (number1.isEmpty || number1 == Btn.n0)) {
-        number1 = "0.";
-      } else {
-        number1 += value;
-      }
+      number1 = (value == Btn.dot && (number1.isEmpty || number1 == Btn.n0))
+          ? "0."
+          : "$number1$value";
     } else if (number2.isEmpty || operand.isNotEmpty) {
+      // Handle number2 input
       if (value == Btn.dot && number2.contains(Btn.dot)) return;
-      if (value == Btn.dot && (number2.isEmpty || number2 == Btn.n0)) {
-        number2 = "0.";
-      } else {
-        number2 += value;
-      }
+      number2 = (value == Btn.dot && (number2.isEmpty || number2 == Btn.n0))
+          ? "0."
+          : "$number2$value";
     }
-    if (value == Btn.clr) {
-      clearAll();
-    }
+    // Handle special buttons
+    if (value == Btn.clr) clearAll();
     if (value == Btn.calculate) {
       calculateResult(); // Calculate result when equals button is pressed
     }
@@ -120,11 +118,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       delete(); // Call the delete function here
       return; // Add a return statement to avoid executing further logic for Btn.del
     }
-    // if (value == Btn.per) {
-    //   calculatePercentage();
-    //   return;
-    // }
-
     setState(() {});
   }
 
@@ -168,21 +161,23 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   /// Returns `void`.
   void calculateResult() {
     if (number1.isEmpty || number2.isEmpty || operand.isEmpty) return;
+
     double num1 = double.parse(number1);
     double num2 = double.parse(number2);
+
     switch (operand) {
       case Btn.add:
         number1 = '${num1 + num2}';
         break;
-      case Btn.substract:
+      case Btn.subtract:
         number1 = '${num1 - num2}';
         break;
-      case Btn.multipy:
+      case Btn.multiply:
         number1 = '${num1 * num2}';
         break;
       case Btn.divide:
         if (num2 == 0) {
-          number1 = 'inf';
+          number1 = 'Infinity';
         } else {
           number1 = '${num1 / num2}';
         }
@@ -191,10 +186,14 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         number1 = '${num1 * (num2 / 100)}';
         break;
       default:
-        return; //Unknown operator, early return
+        return; // Unknown operator, early return
     }
+
     operand = "";
     number2 = "";
+
+    // Update the UI after calculation
+    setState(() {});
   }
 
   /// Returns the color for a given button value.
@@ -216,8 +215,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         : [
             Btn.per,
             Btn.add,
-            Btn.substract,
-            Btn.multipy,
+            Btn.subtract,
+            Btn.multiply,
             Btn.divide,
             Btn.calculate
           ].contains(value)
